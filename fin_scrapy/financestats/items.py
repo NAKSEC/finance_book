@@ -12,3 +12,14 @@ class TestScrapyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+
+
+class YahoofinanceItem(Item):
+    # define the fields for your item here like:
+    # name = Field()
+    pass
+
+
+class FinanceItem(Item):
+    title = Field()
+    body = Field()
