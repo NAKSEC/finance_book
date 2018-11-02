@@ -32,6 +32,27 @@ class FinanceStatsSpider(scrapy.Spider):
             }
 
 
+def del_none_values_in_json(json_obj):
+    """
+    Delete keys with the value ``None`` in a dictionary, recursively.
+
+    This alters the input so you may wish to ``copy`` the dict first.
+    """
+    # For Python 3, write `list(d.items())`; `d.items()` won’t work
+    # For Python 2, write `d.items()`; `d.iteritems()` won’t work
+    for key, value in json_obj.items():
+        if value is None:
+            del json_obj[key]
+        elif isinstance(value, dict):
+            del_none_values_in_json(value)
+        elif isinstance(value, set):
+            json_obj[key].discard(None)
+            try:
+                json_obj[key] = json_obj[key].pop()
+            except:
+                pass
+    return json_obj  # For convenience
+
 class FinanceClassicSpider(scrapy.Spider):
     def __init__(self, ticker):
         self.ticker_stock = ticker
@@ -74,11 +95,11 @@ class FinanceClassicSpider(scrapy.Spider):
 
             }
             context.update(data)
-        print context
+            del_none_values_in_json(context)
+
         return context
 
     def parse_json(self, response):
-        print "3"
         summary_data = OrderedDict()
         try:
             json_loaded_summary = json.loads(response.text)
