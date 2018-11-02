@@ -52,15 +52,15 @@ class FinanceClassicSpider(scrapy.Spider):
     def yield_request(full_url, callback_func, context):
         req = scrapy.Request(url=full_url, callback=callback_func)
         req.meta['context'] = context
-        yield req
+        return req
 
     def parse(self, response):
         other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(
             self.ticker_stock)
 
         summary_table = response.xpath('//div[contains(@data-test,"summary-table")]//tr')
-        print "bb"
-        self.yield_request(other_details_json_link, self.parse_json, summary_table)
+        request = self.yield_request(other_details_json_link, self.parse_json, summary_table)
+        yield request
 
     def parse_table_stats(self, response):
         context = response.meta['context']
@@ -101,9 +101,8 @@ class FinanceClassicSpider(scrapy.Spider):
                  'url': response.url})
         except:
             print ("Failed to parse json response")
-            return {"error": "Failed to parse json response"}
 
         stats_url = "https://finance.yahoo.com/quote/AAPL/key-statistics?p=%s" % (self.ticker_stock)
-        print 'exit'
 
-        self.yield_request(stats_url, self.parse_table_stats, summary_data)
+        request = self.yield_request(stats_url, self.parse_table_stats, summary_data)
+        yield request
