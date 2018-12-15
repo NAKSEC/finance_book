@@ -4,6 +4,8 @@ from collections import OrderedDict
 
 import scrapy
 
+import mongohandler
+
 
 class FinanceStatsSpider(scrapy.Spider):
     name = 'financestats'
@@ -41,6 +43,9 @@ def del_none_values_in_json(json_obj):
     # For Python 3, write `list(d.items())`; `d.items()` won’t work
     # For Python 2, write `d.items()`; `d.iteritems()` won’t work
     for key, value in json_obj.items():
+        if "." in key:
+            new_key = key.replace(".", "")
+            json_obj[new_key] = json_obj.pop(key)
         if value is None:
             del json_obj[key]
         elif isinstance(value, dict):
@@ -52,6 +57,7 @@ def del_none_values_in_json(json_obj):
             except:
                 pass
     return json_obj  # For convenience
+
 
 class FinanceClassicSpider(scrapy.Spider):
     def __init__(self, ticker):
@@ -76,7 +82,12 @@ class FinanceClassicSpider(scrapy.Spider):
         return req
 
     def parse(self, response):
-        other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(
+        other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&" \
+                                  "lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend" \
+                                  "%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics" \
+                                  "%2CcalendarEvents%2CsummaryDetail%2Cprice%2CincomeStatementHistory" \
+                                  "%2CcashflowStatementHistory" \
+                                  "%2CbalanceSheetHistory&corsDomain=finance.yahoo.com".format(
             self.ticker_stock)
 
         summary_table = response.xpath('//div[contains(@data-test,"summary-table")]//tr')
@@ -96,8 +107,36 @@ class FinanceClassicSpider(scrapy.Spider):
             }
             context.update(data)
             del_none_values_in_json(context)
-
+        mongohandler.mongo_insert(dict(context))
         return context
+
+    def raw_json_answer_parser(self, price_dict_raw):
+        price_data = {}
+        for key, value in price_dict_raw.items():
+            if type(value) is dict:
+                if len(value) == 0 or len(value) == 1:
+                    continue
+                price_data[key] = value['fmt']
+                continue
+            price_data[key] = value
+        return price_data
+
+    def format_earnings_list(self, earnings_raw):
+        datelist = []
+        for i in earnings_raw['earningsDate']:
+            datelist.append(i['fmt'])
+        earnings_date = ' to '.join(datelist)
+        return earnings_date
+
+    def parse_dom_table(self, table):
+        summary_data = OrderedDict()
+        for table_data in table:
+            raw_table_key = table_data.xpath('.//td[contains(@class,"C(black)")]//text()').extract_first()
+            raw_table_value = table_data.xpath('.//td[contains(@class,"Ta(end)")]//text()').extract_first()
+            table_key = ''.join(raw_table_key).strip()
+            table_value = ''.join(raw_table_value).strip()
+            summary_data.update({table_key: table_value})
+        return summary_data
 
     def parse_json(self, response):
         summary_data = OrderedDict()
@@ -106,20 +145,21 @@ class FinanceClassicSpider(scrapy.Spider):
             y_Target_Est = json_loaded_summary["quoteSummary"]["result"][0]["financialData"]["targetMeanPrice"]['raw']
             earnings_list = json_loaded_summary["quoteSummary"]["result"][0]["calendarEvents"]['earnings']
             eps = json_loaded_summary["quoteSummary"]["result"][0]["defaultKeyStatistics"]["trailingEps"]['raw']
-            datelist = []
-            for i in earnings_list['earningsDate']:
-                datelist.append(i['fmt'])
-            earnings_date = ' to '.join(datelist)
-            for table_data in response.meta['context']:
-                raw_table_key = table_data.xpath('.//td[contains(@class,"C(black)")]//text()').extract_first()
-                raw_table_value = table_data.xpath('.//td[contains(@class,"Ta(end)")]//text()').extract_first()
-                table_key = ''.join(raw_table_key).strip()
-                table_value = ''.join(raw_table_value).strip()
-                summary_data.update({table_key: table_value})
+            price = json_loaded_summary["quoteSummary"]["result"][0]["price"]
+            summary_detail = json_loaded_summary["quoteSummary"]["result"][0]["summaryDetail"]
+
+            summary_detail_data = self.raw_json_answer_parser(summary_detail)
+            price_data = self.raw_json_answer_parser(price)
+            earnings_date = self.format_earnings_list(earnings_list)
+            summary_data = self.parse_dom_table(response.meta['context'])
+
             summary_data.update(
                 {'1y Target Est': y_Target_Est, 'EPS (TTM)': eps, 'Earnings Date': earnings_date,
                  'ticker': self.ticker_stock,
                  'url': response.url})
+
+            summary_data.update(price_data)
+            summary_data.update(summary_detail_data)
         except:
             print ("Failed to parse json response")
 
