@@ -1,4 +1,7 @@
 # coding=utf-8
+
+from collections import OrderedDict
+
 def del_none_values_in_json(json_obj):
     """
     Delete keys with the value ``None`` in a dictionary, recursively.
@@ -39,3 +42,14 @@ def raw_json_answer_parser(price_dict_raw):
             continue
         price_data[key] = value
     return price_data
+
+
+def parse_dom_table(table):
+    summary_data = OrderedDict()
+    for table_data in table:
+        raw_table_key = table_data.xpath('.//td[contains(@class,"C(black)")]//text()').extract_first()
+        raw_table_value = table_data.xpath('.//td[contains(@class,"Ta(end)")]//text()').extract_first()
+        table_key = ''.join(raw_table_key).strip()
+        table_value = ''.join(raw_table_value).strip()
+        summary_data.update({table_key: table_value})
+    return summary_data
