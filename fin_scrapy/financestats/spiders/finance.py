@@ -4,59 +4,17 @@ from collections import OrderedDict
 
 import scrapy
 
-import mongohandler
+import utils
+from mongohandler import *
+
+DOCUMENT_STOCKS = "stocks"
+DOCUMENT_BALANCE_SHEET = "balance_sheet"
+DOCUMENT_CASH_FLOW = "cash_flow"
+MONGO_ADDRESS = 'mongodb://localhost:27017/'
+
+MONGO_CONNECTION = Mong_Client_Wrapper(MONGO_ADDRESS)
 
 
-class FinanceStatsSpider(scrapy.Spider):
-    name = 'financestats'
-    allowed_domains = ['finance.yahoo.com']
-    start_urls = ['http://finance.yahoo.com/quote/%5EGSPC?p=^GSPCf/']
-
-    def start_requests(self):
-        urls = [
-            'https://finance.yahoo.com/quote/AAPL/key-statistics?p=AAPL'
-            # 'https://finance.yahoo.com/quote/AAPL/financials?p=AAPL',
-            # 'https://finance.yahoo.com/quote/AAPL/balance-sheet?p=AAPL',
-            # 'https://finance.yahoo.com/quote/AAPL/cash-flow?p=AAPL'
-        ]
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
-
-    def parse(self, response):
-        rows = response.xpath('//table//tr')
-        for row in rows[1:]:
-            print {
-                row.xpath('td[1]//text()').extract_first(): {row.xpath('td[2]//text()').extract_first(),
-                                                             row.xpath('td[3]//text()').extract_first(),
-                                                             row.xpath('td[4]//text()').extract_first(),
-                                                             row.xpath('td[5]//text()').extract_first()}
-
-            }
-
-
-def del_none_values_in_json(json_obj):
-    """
-    Delete keys with the value ``None`` in a dictionary, recursively.
-
-    This alters the input so you may wish to ``copy`` the dict first.
-    """
-    # For Python 3, write `list(d.items())`; `d.items()` won’t work
-    # For Python 2, write `d.items()`; `d.iteritems()` won’t work
-    for key, value in json_obj.items():
-        if "." in key:
-            new_key = key.replace(".", "")
-            json_obj[new_key] = json_obj.pop(key)
-        if value is None:
-            del json_obj[key]
-        elif isinstance(value, dict):
-            del_none_values_in_json(value)
-        elif isinstance(value, set):
-            json_obj[key].discard(None)
-            try:
-                json_obj[key] = json_obj[key].pop()
-            except:
-                pass
-    return json_obj  # For convenience
 
 
 class FinanceClassicSpider(scrapy.Spider):
@@ -67,7 +25,7 @@ class FinanceClassicSpider(scrapy.Spider):
     allowed_domains = ['finance.yahoo.com']
 
     def start_requests(self):
-        print self.ticker_stock
+        print (self.ticker_stock)
         urls = [
             "http://finance.yahoo.com/quote/{0}?p={1}".format(self.ticker_stock, self.ticker_stock)
         ]
@@ -94,7 +52,9 @@ class FinanceClassicSpider(scrapy.Spider):
         request = self.yield_request(other_details_json_link, self.parse_json, summary_table)
         yield request
 
-    def parse_table_stats(self, response):
+    @staticmethod
+    def parse_table_stats(response):
+        print "in parse table stats"
         context = response.meta['context']
         rows = response.xpath('//table//tr')
         for row in rows[1:]:
@@ -105,21 +65,11 @@ class FinanceClassicSpider(scrapy.Spider):
                                                              row.xpath('td[5]//text()').extract_first()}
 
             }
-            context.update(data)
-            del_none_values_in_json(context)
-        mongohandler.mongo_insert(dict(context))
-        return context
+        context["summary_data"].update(data)
+        utils.del_none_values_in_json(context["summary_data"])
 
-    def raw_json_answer_parser(self, price_dict_raw):
-        price_data = {}
-        for key, value in price_dict_raw.items():
-            if type(value) is dict:
-                if len(value) == 0 or len(value) == 1:
-                    continue
-                price_data[key] = value['fmt']
-                continue
-            price_data[key] = value
-        return price_data
+        insert_data_into_mongo(context)
+        return context
 
     def format_earnings_list(self, earnings_raw):
         datelist = []
@@ -138,32 +88,85 @@ class FinanceClassicSpider(scrapy.Spider):
             summary_data.update({table_key: table_value})
         return summary_data
 
+    def parse_balance_sheet(self, json_raw_result):
+        balance_sheet = json_raw_result["balanceSheetHistory"]["balanceSheetStatements"][0]
+        balance_sheet_data = utils.raw_json_answer_parser(balance_sheet)
+        balance_sheet_data['ticker'] = self.ticker_stock
+        return balance_sheet_data
+
+    def parse_summary_data(self, json_raw_result, data, url):
+        summary_detail = json_raw_result["summaryDetail"]
+        summary_detail_data = utils.raw_json_answer_parser(summary_detail)
+
+        recommendation_trend_data = utils.raw_json_answer_parser(json_raw_result["recommendationTrend"])
+
+        price_data = utils.raw_json_answer_parser(json_raw_result["price"])
+        earnings_date = self.format_earnings_list(json_raw_result["calendarEvents"]['earnings'])
+        summary_data = self.parse_dom_table(data)
+
+        summary_data.update(
+            {'1y Target Est': json_raw_result["financialData"]["targetMeanPrice"]['raw'],
+             'EPS (TTM)': json_raw_result["defaultKeyStatistics"]["trailingEps"]['raw'],
+             'Earnings Date': earnings_date,
+             'ticker': self.ticker_stock,
+             'url': url})
+
+        summary_data.update(price_data)
+        summary_data.update(summary_detail_data)
+        summary_data.update(recommendation_trend_data)
+        return summary_data
+
+    def parse_cash_flow_statement(self, json_raw_result):
+        cash_flow_statements_list = json_raw_result["cashflowStatementHistory"]["cashflowStatements"]
+        cash_flow_statement_data = []
+        for cash_flow_statement_yearly in cash_flow_statements_list:
+            cash_flow = utils.raw_json_answer_parser(cash_flow_statement_yearly)
+            cash_flow['ticker'] = self.ticker_stock
+            cash_flow_statement_data.append(cash_flow)
+        return cash_flow_statement_data
+
+    def parse_income_statement(self, json_raw_result):
+        income_statement_history_list = json_raw_result["incomeStatementHistory"]["incomeStatementHistory"]
+        income_statement_data = []
+
+        for income_statement_history in income_statement_history_list:
+            income_statement = utils.raw_json_answer_parser(income_statement_history)
+            income_statement['ticker'] = self.ticker_stock
+            income_statement_data.append(income_statement)
+
+        return income_statement_data
+
     def parse_json(self, response):
-        summary_data = OrderedDict()
+        data_context = {}
         try:
             json_loaded_summary = json.loads(response.text)
-            y_Target_Est = json_loaded_summary["quoteSummary"]["result"][0]["financialData"]["targetMeanPrice"]['raw']
-            earnings_list = json_loaded_summary["quoteSummary"]["result"][0]["calendarEvents"]['earnings']
-            eps = json_loaded_summary["quoteSummary"]["result"][0]["defaultKeyStatistics"]["trailingEps"]['raw']
-            price = json_loaded_summary["quoteSummary"]["result"][0]["price"]
-            summary_detail = json_loaded_summary["quoteSummary"]["result"][0]["summaryDetail"]
+            json_result = json_loaded_summary["quoteSummary"]["result"][0]
 
-            summary_detail_data = self.raw_json_answer_parser(summary_detail)
-            price_data = self.raw_json_answer_parser(price)
-            earnings_date = self.format_earnings_list(earnings_list)
-            summary_data = self.parse_dom_table(response.meta['context'])
+            data_context["summary_data"] = self.parse_summary_data(json_result,
+                                                                   response.meta['context'],
+                                                                   response.url)
 
-            summary_data.update(
-                {'1y Target Est': y_Target_Est, 'EPS (TTM)': eps, 'Earnings Date': earnings_date,
-                 'ticker': self.ticker_stock,
-                 'url': response.url})
+            data_context["cash_flow"] = self.parse_cash_flow_statement(json_result)
+            data_context["balance_sheet"] = self.parse_balance_sheet(json_result)
+            data_context["income_statement"] = self.parse_income_statement(json_result)
 
-            summary_data.update(price_data)
-            summary_data.update(summary_detail_data)
-        except:
+        except Exception as e:
+            print e
             print ("Failed to parse json response")
 
         stats_url = "https://finance.yahoo.com/quote/AAPL/key-statistics?p=%s" % (self.ticker_stock)
 
-        request = self.yield_request(stats_url, self.parse_table_stats, summary_data)
+        request = self.yield_request(stats_url, self.parse_table_stats, data_context)
         yield request
+
+
+def insert_data_into_mongo(context):
+    print "insert data into mongo"
+    print type(context)
+    for key, value in context.items():
+        print "inserted %s" % value
+        if type(value) is list:
+            for item in value:
+                MONGO_CONNECTION.mongo_insert(key, dict(item))
+        else:
+            MONGO_CONNECTION.mongo_insert(key, dict(value))
