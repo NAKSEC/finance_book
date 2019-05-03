@@ -9,8 +9,7 @@ from mongohandler import *
 
 MONGO_ADDRESS = 'mongodb://localhost:27017/'
 
-MONGO_CONNECTION = Mong_Client_Wrapper(MONGO_ADDRESS)
-
+MONGO_CONNECTION = Mongo_Client_Wrapper(MONGO_ADDRESS)
 
 class FinanceClassicSpider(scrapy.Spider):
     def __init__(self, tickers):
@@ -99,8 +98,6 @@ class FinanceClassicSpider(scrapy.Spider):
             print ("Failed to parse json response")
 
         insert_data_into_mongo(data_context)
-
-
 
 
 def insert_data_into_mongo(context):

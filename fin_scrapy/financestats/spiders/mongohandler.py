@@ -2,7 +2,7 @@ import pymongo
 from pymongo import *
 
 
-class Mong_Client_Wrapper():
+class Mongo_Client_Wrapper():
     def __init__(self, address):
         try:
             self.client = MongoClient(address, False)
