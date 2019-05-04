@@ -3,7 +3,7 @@ import json
 
 import scrapy
 
-import parsers
+import parser
 import utils
 from mongohandler import *
 
@@ -84,14 +84,14 @@ class FinanceClassicSpider(scrapy.Spider):
             json_loaded_summary = json.loads(response.text)
             json_result = json_loaded_summary["quoteSummary"]["result"][0]
 
-            data_context["summary_data"] = parsers.parse_summary_data(json_result,
-                                                                      response.meta['context'],
-                                                                      response.url,
-                                                                      ticker)
+            data_context["summary_data"] = parser.parse_summary_data(json_result,
+                                                                     response.meta['context'],
+                                                                     response.url,
+                                                                     ticker)
 
-            data_context["cash_flow"] = parsers.parse_cash_flow_statement(json_result, ticker)
-            data_context["balance_sheet"] = parsers.parse_balance_sheet(json_result, ticker)
-            data_context["income_statement"] = parsers.parse_income_statement(json_result, ticker)
+            data_context["cash_flow"] = parser.parse_cash_flow_statement(json_result, ticker)
+            data_context["balance_sheet"] = parser.parse_balance_sheet(json_result, ticker)
+            data_context["income_statement"] = parser.parse_income_statement(json_result, ticker)
 
         except Exception as e:
             print e
