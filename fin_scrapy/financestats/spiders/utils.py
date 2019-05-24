@@ -15,6 +15,7 @@ def del_none_values_in_json(json_obj):
             new_key = key.replace(".", "")
             json_obj[new_key] = json_obj.pop(key)
         if value is None:
+            print "This value is None : %s " % value
             del json_obj[key]
         elif isinstance(value, dict):
             del_none_values_in_json(value)

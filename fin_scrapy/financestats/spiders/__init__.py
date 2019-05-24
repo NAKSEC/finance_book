@@ -3,6 +3,9 @@
 # Please refer to the documentation for information on how to create and manage
 # your spiders.
 
+import sys
+
+TRACE_FILES = ["parser", "finance", "mongohandler", "utils.py"]
 
 def trace_calls(frame, event, arg):
     if event != 'call':
@@ -17,9 +20,14 @@ def trace_calls(frame, event, arg):
     caller = frame.f_back
     caller_line_no = caller.f_lineno
     caller_filename = caller.f_code.co_filename
-    print 'Call to %s on line %s of %s from line %s of %s' % \
-          (func_name, func_line_no, func_filename,
-           caller_line_no, caller_filename)
+
+    for file_name in TRACE_FILES:
+        if file_name in caller_filename:
+            if "lib/python2.7/" not in func_filename:
+                print 'Call to %s on line %s of %s from line %s of %s' % \
+                      (func_name, func_line_no, func_filename, caller_line_no, caller_filename)
+
     return
 
-# sys.settrace(trace_calls)
+
+sys.settrace(trace_calls)
