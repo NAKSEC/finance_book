@@ -16,10 +16,9 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         if isinstance(o, datetime.datetime):
             return str(o)
-        return json.JSONEncoder.default(self, o)
+        return o.__dict__
 
-
-# create the flask object
+    # create the flask object
 app = Flask(__name__)
 CORS(app)
 

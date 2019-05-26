@@ -1,12 +1,12 @@
 ''' controller and routes for users '''
 import json
-import os
 
-import calculation
 import logger
 from app import app, mongo
 from bson import json_util
 from flask import request, jsonify
+
+from data import *
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
@@ -66,11 +66,5 @@ def get_finance_by_ticker():
     if request.method == 'GET':
         ticker = request.args.get('ticker', type=str)
         LOG.info("ticker : %s " % ticker)
-        cursor = mongo.balance_sheet.find({"ticker": ticker})
-        json_docs = []
-        for doc in cursor:
-            current_assest = float(doc["totalCurrentAssets"])
-            current_liabilites = float(doc["totalCurrentLiabilities"])
-            current_ratio = calculation.calculator.get_current_ratio(current_assest, current_liabilites)
-            json_docs.append("Liquid : {:10.4f}".format(current_ratio))
-        return jsonify(json_docs), 200
+        balance = get_company_data(ticker)
+        return jsonify(balance), 200

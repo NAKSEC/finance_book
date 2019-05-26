@@ -49,7 +49,6 @@ class IncomeStatement:
                  others,
                  other_expense_or_income,
                  interest_expense,
-
                  income_tax_expense):
         self.revenue = Revenue(total_revenue, cost_of_revenue)
         self.operating_expense = OperatingExpenses(research_development,

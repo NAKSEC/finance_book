@@ -1,8 +1,7 @@
 #!/bin/bash
-
-virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
+virtualenv --python=/usr/bin/python2.7 .env && source .env/bin/activate && pip install -r requirements.txt
 cd fin_scrapy
-scrapy crawl -a ticker=AAPL --nolog -o - -t json finance
+scrapy crawl -a tickers=GOOG,AAPL,MSFT,AMZN,FB,HP,TEAM,CSCO,INTC,CRM --nolog -o - -t json finance
 
 cd ..
 docker-compose run 
