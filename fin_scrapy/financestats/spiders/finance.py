@@ -91,6 +91,7 @@ class FinanceClassicSpider(scrapy.Spider):
 
             data_context["cash_flow"] = parser.parse_cash_flow_statement(json_result, ticker)
             data_context["balance_sheet"] = parser.parse_balance_sheet(json_result, ticker)
+            print "balance sheets %s" % len(data_context["balance_sheet"])
             data_context["income_statement"] = parser.parse_income_statement(json_result, ticker)
 
         except Exception as e:

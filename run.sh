@@ -1,10 +1,11 @@
 #!/bin/bash
-virtualenv --python=/usr/bin/python2.7 .env && source .env/bin/activate && pip install -r requirements.txt
+docker run -d -p 27017-27019:27017-27019 --name mongodb mongo:4.0.4
+virtualenv --python=python2.7 .env && source .env/bin/activate && pip install -r requirements.txt
 cd fin_scrapy
 scrapy crawl -a tickers=GOOG,AAPL,MSFT,AMZN,FB,HP,TEAM,CSCO,INTC,CRM --nolog -o - -t json finance
 
 cd ..
-docker-compose run 
+docker-compose run
 
 cd finance_tools
 ./env_file.sh

@@ -1,1 +1,61 @@
 
+2019-05-24 08:56:55,830 - root - INFO - running environment: None
+2019-05-24 08:58:01,959 - root - INFO - running environment: development
+2019-05-24 08:58:02,201 - root - INFO - running environment: development
+2019-05-24 08:58:30,581 - app.controllers.users - INFO - ticker : None 
+2019-05-24 08:59:00,075 - root - INFO - running environment: development
+2019-05-24 08:59:02,854 - root - INFO - running environment: development
+2019-05-24 08:59:07,558 - app.controllers.users - INFO - ticker : None 
+2019-05-24 08:59:46,423 - root - INFO - running environment: development
+2019-05-24 08:59:50,168 - app.controllers.users - INFO - ticker : None 
+2019-05-24 09:00:20,908 - root - INFO - running environment: development
+2019-05-24 09:00:39,830 - root - INFO - running environment: development
+2019-05-24 09:00:43,767 - app.controllers.users - INFO - ticker : None 
+2019-05-24 09:01:08,531 - app.controllers.users - INFO - ticker : MSFT 
+2019-05-24 09:01:44,793 - root - INFO - running environment: development
+2019-05-24 09:01:46,822 - app.controllers.users - INFO - ticker : MSFT 
+2019-05-24 09:01:59,647 - root - INFO - running environment: development
+2019-05-24 09:02:03,458 - app.controllers.users - INFO - ticker : MSFT 
+2019-05-24 09:02:03,461 - app.controllers.data - INFO - <modules.calculation.balanceSheet.BalanceSheet instance at 0x108f0b6c8>
+2019-05-24 09:04:31,529 - root - INFO - running environment: development
+2019-05-24 09:05:23,573 - root - INFO - running environment: development
+2019-05-24 09:05:23,805 - root - INFO - running environment: development
+2019-05-24 09:05:26,786 - app.controllers.users - INFO - ticker : MSFT 
+2019-05-24 09:05:26,790 - app.controllers.data - INFO - <modules.calculation.balanceSheet.BalanceSheet instance at 0x10af6e710>
+2019-05-24 09:11:01,535 - root - INFO - running environment: development
+2019-05-24 09:11:17,452 - root - INFO - running environment: development
+2019-05-24 09:11:38,406 - root - INFO - running environment: development
+2019-05-24 09:11:46,248 - root - INFO - running environment: development
+2019-05-24 09:11:50,073 - root - INFO - running environment: development
+2019-05-24 09:12:17,964 - root - INFO - running environment: development
+2019-05-24 10:41:53,471 - root - INFO - running environment: development
+2019-05-24 10:41:53,722 - root - INFO - running environment: development
+2019-05-24 10:42:16,638 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:43:23,654 - root - INFO - running environment: development
+2019-05-24 10:43:33,061 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:43:55,396 - root - INFO - running environment: development
+2019-05-24 10:43:55,689 - root - INFO - running environment: development
+2019-05-24 10:43:58,314 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:44:14,689 - root - INFO - running environment: development
+2019-05-24 10:44:18,675 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:44:31,600 - root - INFO - running environment: development
+2019-05-24 10:44:33,705 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:44:46,549 - root - INFO - running environment: development
+2019-05-24 10:44:47,685 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:44:59,505 - root - INFO - running environment: development
+2019-05-24 10:45:03,130 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:45:43,968 - root - INFO - running environment: development
+2019-05-24 10:45:44,200 - root - INFO - running environment: development
+2019-05-24 10:45:45,782 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:46:37,986 - root - INFO - running environment: development
+2019-05-24 10:46:39,304 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:46:52,934 - root - INFO - running environment: development
+2019-05-24 10:46:54,423 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:46:54,432 - app.controllers.data - INFO - <modules.calculation.balanceSheet.BalanceSheet instance at 0x10c3ca758>
+2019-05-24 10:48:08,802 - root - INFO - running environment: development
+2019-05-24 10:48:09,701 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:48:09,705 - app.controllers.data - INFO - <modules.calculation.balanceSheet.BalanceSheet instance at 0x10b5b27a0>
+2019-05-24 10:48:28,745 - root - INFO - running environment: development
+2019-05-24 10:48:29,071 - app.controllers.users - INFO - ticker : AAPL 
+2019-05-24 10:48:29,074 - app.controllers.data - INFO - 1538179200
+2019-05-26 22:37:56,610 - root - INFO - running environment: development
