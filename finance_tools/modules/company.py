@@ -2,7 +2,6 @@ from calculation.balanceSheet import BalanceSheet
 from calculation.incomeStatement import IncomeStatement
 
 
-
 class Comapny:
     def __init__(self, company_name, date, balance_sheet, income_statement, cash_flow):
         self.company_name = company_name

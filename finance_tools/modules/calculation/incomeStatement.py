@@ -48,7 +48,7 @@ class OtherIncomeAndExpense:
         self.income_tax_expense = income_tax_expense
 
     def get_total(self):
-        return self.other_expense_or_income + self.income_tax_expense + self.income_tax_expense
+        return self.other_expense_or_income + self.interest_expense + self.income_tax_expense
 
 
 class IncomeStatement:
@@ -71,6 +71,12 @@ class IncomeStatement:
         self.other_income_or_expense = OtherIncomeAndExpense(other_expense_or_income,
                                                              interest_expense,
                                                              income_tax_expense)
-        self.net_income = self.revenue.gross_profit - \
-                          self.operating_expense.get_total() - \
-                          self.other_income_or_expense.get_total()
+
+        self.net_income = self.revenue.gross_profit - self.operating_expense.get_total() - self.other_income_or_expense.get_total()
+
+    def get_operating_profit_margin(self):
+        return formula.get_operating_margin(self.revenue.gross_profit - self.operating_expense.get_total(),
+                                            self.revenue.total_revenue)
+
+    def get_net_profit_margin(self):
+        return formula.get_net_profit_margin(self.net_income, self.revenue.total_revenue)

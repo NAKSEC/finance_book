@@ -177,8 +177,8 @@ class BalanceSheet():
                              other_stockholder_equity)
 
     def verify(self):
-        return (self.current_assets + self.long_term_assets) == \
-               (self.current_liabilities + self.long_term_liabilities + self.equity)
+        return (self.current_assets.get_total() + self.long_term_assets.get_total()) == \
+               (self.current_liabilities.get_total() + self.long_term_liabilities.get_total() + self.equity.get_total())
 
     def get_current_ratio(self):
         return formula.get_current_ratio(self.current_assets.get_total(), self.current_liabilities.get_total())

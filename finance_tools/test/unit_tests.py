@@ -2,6 +2,79 @@ import unittest
 import sys
 sys.path.append("../")
 from modules.calculation.incomeStatement import OperatingExpenses, Revenue, IncomeStatement
+from modules.calculation.balanceSheet import BalanceSheet
+import random
+import string
+import time
+
+class TestBalanceSheet(unittest.TestCase):
+
+    def get_random_int(self, min = 0, max = sys.maxint):
+        return random.randint(min, max)
+
+    def test_balance_sheet(self):
+        company_name = "".join(random.choice(string.ascii_letters) for x in range(random.randint(1, 15)))
+        date = int(time.time())
+        cash = self.get_random_int()
+        short_term_investment = self.get_random_int()
+        net_receivable = self.get_random_int()
+        inventory = self.get_random_int()
+        other_current_assets = self.get_random_int()
+        long_term_investment = self.get_random_int()
+        property_plant_equipment = self.get_random_int()
+        goodwill = self.get_random_int()
+        intangible_assets = self.get_random_int()
+        amortization = self.get_random_int()
+        other_assets = self.get_random_int()
+        deferred_long_term_assets_change = self.get_random_int()
+        accounts_payable = self.get_random_int()
+        short_debt = self.get_random_int()
+        other_current_liabilities = self.get_random_int()
+        long_term_debt = self.get_random_int()
+        other_liabilities = self.get_random_int()
+        deferred_long_term_liability = self.get_random_int()
+        minority_interest = self.get_random_int()
+        negative_goodwill = self.get_random_int()
+        misc_stocks_options_warrants = self.get_random_int()
+        redeemable_preferred_stock =self.get_random_int()
+        preferred_stock =self.get_random_int()
+        common_stock = self.get_random_int()
+        retained_earnings = self.get_random_int()
+        treasury_stock = self.get_random_int()
+        capital_surplus = self.get_random_int()
+        other_stockholder_equity = self.get_random_int()
+        balance_sheet = BalanceSheet(company_name,
+                 date,
+                 cash,
+                 short_term_investment,
+                 net_receivable,
+                 inventory,
+                 other_current_assets,
+                 long_term_investment,
+                 property_plant_equipment,
+                 goodwill,
+                 intangible_assets,
+                 amortization,
+                 other_assets,
+                 deferred_long_term_assets_change,
+                 accounts_payable,
+                 short_debt,
+                 other_current_liabilities,
+                 long_term_debt,
+                 other_liabilities,
+                 deferred_long_term_liability,
+                 minority_interest,
+                 negative_goodwill,
+                 misc_stocks_options_warrants,
+                 redeemable_preferred_stock,
+                 preferred_stock,
+                 common_stock,
+                 retained_earnings,
+                 treasury_stock,
+                 capital_surplus,
+                 other_stockholder_equity)
+
+        self.assertTrue(False == balance_sheet.verify(), "balance sheet is not equal")
 
 
 class TestIncomeStatement(unittest.TestCase):
@@ -32,8 +105,9 @@ class TestIncomeStatement(unittest.TestCase):
         non_recurring = 20
         others = 30
         other_expense_or_income = 10
-        interest_expense = 40
-        income_tax_expense = 20
+        interest_expense = 0
+        income_tax_expense = 10
+
         income_statement = IncomeStatement(total_revenue,
                                            cost_of_revenue,
                                            research_development,
@@ -44,7 +118,7 @@ class TestIncomeStatement(unittest.TestCase):
                                            interest_expense,
                                            income_tax_expense)
 
-        expected = total_revenue -\
+        expected = total_revenue - \
                    cost_of_revenue - \
                    research_development - \
                    selling_general_and_administrative - \
@@ -54,8 +128,37 @@ class TestIncomeStatement(unittest.TestCase):
                    interest_expense - \
                    income_tax_expense
 
-        self.assertEqual(income_statement.net_income, expected, "Should be %f, actual was : %f " % (expected, income_statement.net_income))
+        operating_expense = income_statement.operating_expense.get_total()
+        expected_operating = research_development + selling_general_and_administrative + others + non_recurring
 
+        self.assertEqual(operating_expense, expected_operating,
+                         "Operating expense %s " % income_statement.operating_expense.get_total())
+
+        expected_other_income = other_expense_or_income + interest_expense + income_tax_expense
+        self.assertEqual(income_statement.other_income_or_expense.get_total(),
+                         expected_other_income,
+                         "Should be %f, actual was : %f " % (expected_other_income,
+                                                             income_statement.other_income_or_expense.get_total()))
+
+        self.assertEqual(income_statement.net_income,
+                         expected,
+                         "Should be %f, actual was : %f " % (expected, income_statement.net_income))
+
+        expected_profit_margin = float(expected) / float(total_revenue)
+        self.assertEqual(income_statement.get_net_profit_margin(),
+                         expected_profit_margin,
+                         "profit margin should be %f" % expected_profit_margin)
+
+        expected_operating_margin = float(total_revenue - \
+                                     cost_of_revenue - \
+                                     research_development - \
+                                     selling_general_and_administrative - \
+                                     non_recurring - \
+                                     others) / float(total_revenue)
+
+        self.assertEqual(income_statement.get_operating_profit_margin(),
+                         expected_operating_margin,
+                         "expected operating margin should be %f" % expected_operating_margin)
 
 if __name__ == '__main__':
     unittest.main()
