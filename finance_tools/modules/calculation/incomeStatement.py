@@ -3,12 +3,17 @@ import formula
 
 class Revenue:
     def __init__(self, total_revenue, cost_of_revenue):
+        """
+
+        :param total_revenue:
+        :param cost_of_revenue:
+        """
         self.total_revenue = total_revenue
         self.cost_of_revenue = cost_of_revenue
         self.gross_profit = self.total_revenue - self.cost_of_revenue
 
     def get_margin(self):
-        formula.get_gross_profit_margin(self.gross_profit, self.total_revenue)
+        return formula.get_gross_profit_margin(self.gross_profit, self.total_revenue)
 
 
 class OperatingExpenses:
@@ -17,6 +22,13 @@ class OperatingExpenses:
                  selling_general_and_administrative,
                  non_recurring,
                  others):
+        """
+
+        :param research_development:
+        :param selling_general_and_administrative:
+        :param non_recurring:
+        :param others:
+        """
         self.research_development = research_development
         self.selling_general_and_administrative = selling_general_and_administrative
         self.non_recurring = non_recurring
