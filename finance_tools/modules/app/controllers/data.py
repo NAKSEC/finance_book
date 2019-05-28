@@ -1,5 +1,5 @@
 import os
-
+import time
 import logger
 from app import mongo
 from modules.calculation.balanceSheet import BalanceSheet
@@ -11,7 +11,7 @@ LOG = logger.get_root_logger(
 
 def build_balance_sheet(doc):
     return BalanceSheet(doc["ticker"],
-                        doc["endDate"],
+                        time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(doc["endDate"])),
                         float(doc["cash"]),
                         float(doc["shortTermInvestments"]),
                         float(doc["netReceivables"]),
