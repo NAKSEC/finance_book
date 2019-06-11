@@ -1,11 +1,28 @@
-import unittest
 import sys
+import unittest
+
 sys.path.append("../")
 from modules.calculation.incomeStatement import OperatingExpenses, Revenue, IncomeStatement
 from modules.calculation.balanceSheet import BalanceSheet
 import random
 import string
 import time
+import datetime
+import json
+
+from bson.objectid import ObjectId
+
+
+class JSONEncoder(json.JSONEncoder):
+    ''' extend json-encoder class'''
+
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        if isinstance(o, datetime.datetime):
+            return str(o)
+        return o.__dict__
+
 
 class TestBalanceSheet(unittest.TestCase):
 
@@ -117,6 +134,8 @@ class TestIncomeStatement(unittest.TestCase):
                                            other_expense_or_income,
                                            interest_expense,
                                            income_tax_expense)
+
+        print JSONEncoder().encode(income_statement)
 
         expected = total_revenue - \
                    cost_of_revenue - \

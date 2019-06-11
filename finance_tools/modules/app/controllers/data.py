@@ -1,5 +1,6 @@
 import os
 import time
+
 import logger
 from app import mongo
 from modules.calculation.balanceSheet import BalanceSheet
@@ -17,21 +18,25 @@ def build_balance_sheet(doc):
                         float(doc["netReceivables"]),
                         float(doc["inventory"]),
                         float(doc["otherCurrentAssets"]),
+                        float(doc["totalCurrentAssets"]),
                         float(doc["longTermInvestments"]),
                         float(doc["propertyPlantEquipment"]),
                         float(doc.get("goodWill", 0)),
                         float(doc.get("intangibleAssets", 0)),
                         float(doc.get("amortization", 0)),
                         float(doc["otherAssets"]),
+                        float(doc["totalAssets"]),
                         float(doc.get("deferredLongTermAssetCharges", 0)),
                         float(doc["accountsPayable"]),
-                        float(doc["shortLongTermDebt"]),
+                        float(doc.get("shortLongTermDebt", 0)),
                         float(doc["otherCurrentLiab"]),
+                        float(doc["totalCurrentLiabilities"]),
                         float(doc["longTermDebt"]),
                         float(doc["otherLiab"]),
                         float(doc.get("deferredLongTermLiab", 0)),
                         float(doc.get("minorityInterest", 0)),
                         float(doc.get("negativeGoodwill", 0)),
+                        float(doc["totalLiab"]),
                         float(doc.get("misc.StocksOptionsWarrants", 0)),  # TODO : find company with options
                         float(doc.get("redeemablePreferredStock", 0)),  # TODO : find company with options
                         float(doc.get("preferredStock", 0)),
@@ -47,6 +52,7 @@ def get_company_data(ticker):
     balances = []
     for doc in cursor:
         balance = build_balance_sheet(doc)
-        LOG.info(doc["endDate"])
+        LOG.info(balance.verify())
+        LOG.info(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(doc["endDate"])))
         balances.append(balance)
     return balances
