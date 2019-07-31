@@ -1,12 +1,18 @@
 ''' controller and routes for users '''
 import json
+import uuid
 
 import logger
 from app import app, mongo
 from bson import json_util
-from flask import request, jsonify
+from flask import request, jsonify, flash, redirect, send_file
+from werkzeug.utils import secure_filename
 
 from data import *
+
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = os.path.join(ROOT_PATH, 'uploads')
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
@@ -68,3 +74,49 @@ def get_finance_by_ticker():
         LOG.info("ticker : %s " % ticker)
         balance = get_company_data(ticker)
         return jsonify(balance), 200
+
+
+@app.route('/upload_pdf', methods=['POST'])
+def save_files():
+    print "uploaded"
+    if request.method == 'POST':
+        print request.files
+        print request.files.keys
+        # check if the post request has the file part
+        if 'statement_fill' not in request.files:
+            LOG.info("statement_fill not in request.files")
+            flash('No file part')
+            return jsonify({'ok': False, 'message': 'Bad request parameters!'}), 400
+        file = request.files['statement_fill']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            LOG.info("no selected file")
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            LOG.info("save file")
+            filename = secure_filename(file.filename).encode('UTF-8')
+            flash('file {} saved'.format(filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return jsonify({'ok': True,
+                            'file_name': file.filename,
+                            'message': 'success to save file',
+                            'id': str(uuid.uuid4()),
+                            'originalName': file.filename,
+                            'url': request.url_root + UPLOAD_FOLDER + "/" + file.filename
+                            }), 200
+    return jsonify({'ok': False, 'message': 'Bad request parameters!'}), 400
+
+
+@app.route('/uploads/<path:path>', methods=['GET'])
+def get_pdf_file(path):
+    LOG.info("get pdf request : %s" % path)
+    dir_list = os.listdir(app.config['UPLOAD_FOLDER'])
+    print dir_list
+    for i in dir_list:
+        if path == i:
+            LOG.info("found the relevant pdf to send")
+            return send_file(os.path.join(app.config['UPLOAD_FOLDER'], i), attachment_filename=path, as_attachment=True,
+                             mimetype="application/pdf")
+    return jsonify({'ok': False, 'message': 'Cant find the pdf'}), 400

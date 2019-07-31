@@ -54,5 +54,8 @@ def get_company_data(ticker):
         balance = build_balance_sheet(doc)
         LOG.info(balance.verify())
         LOG.info(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(doc["endDate"])))
+        LOG.info("current ratio : %s " % balance.get_current_ratio())
+        LOG.info("quick ratio : %s " % balance.get_quick_ratio())
+        LOG.info("debt to equity : %s " % balance.get_debt_to_equity())
         balances.append(balance)
     return balances

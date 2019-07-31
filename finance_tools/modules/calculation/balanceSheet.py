@@ -212,6 +212,6 @@ class BalanceSheet():
                                        self.current_assets.inventory)
 
     def get_debt_to_equity(self):
-        return formula.get_debt_to_equity(self.current_liabilities.get_total() +
-                                          self.long_term_liabilities.get_total(),
+        print (self.equity.get_total())
+        return formula.get_debt_to_equity(self.long_term_liabilities.long_term_debt,
                                           self.equity.get_total())
