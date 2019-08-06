@@ -1,31 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# import camelot
-# from camelot.core import TableList
-# from camelot.parsers import Lattice, Stream
-# from camelot.ext.ghostscript import Ghostscript
-import json
-import re
 
-ANNOTATION = [u'\u05e8\u05d5\u05d0\u05d1', u'\u05e8\u05d5\u05d0\u05d9\u05d1']
-TITLE = u'\u05e9\u05d7"  \u05d9\u05e4\u05dc\u05d0\u05d1'
+from table_parser import *
 
 
 def main():
-    # tables = camelot.read_pdf('KPMG3.pdf', pages='58', flavor='stream')
-    # print tables
-    # tables.export("json", f='json')
+    j = JsonTableParser(
+        '/Users/galnakash/PycharmProjects/http_poc/fin_scrapy/maya/tests/out/json-68_2018-page-82-table-1.json')
+    j.parse()
 
-    json_file = open("/Users/galnakash/PycharmProjects/http_poc/fin_scrapy/maya/json-page-58-table-1", "r")
-    json_file = open("/Users/galnakash/PycharmProjects/http_poc/fin_scrapy/maya/json-page-60-table-1", "r")
-    json_file = open("/Users/galnakash/PycharmProjects/http_poc/fin_scrapy/maya/json-page-399-table-1", "r")
-    json_file = open("/Users/galnakash/PycharmProjects/http_poc/fin_scrapy/maya/json-page-84-table-1", "r")
-    data = json.load(json_file, encoding='utf8')
-    json_file.close()
-    s = json.dumps(data).decode('unicode-escape').encode('utf8')
-    print data
+    c = CSVWriter(j)
 
+    c.create_csv_columns_and_rows()
+
+    c.write_to_file("x.csv")
+    '''
     context = first_order_and_label(data)
     data = context[0]
     years = context[1]
@@ -76,7 +66,7 @@ def first_order_and_label(data):
     escaped_data = []
     years = []
     for entry in data:
-        new_entry = remove_empty_string(entry)
+        new_entry = remove_empty_key_value_from_dictionary(entry)
         escaped_data.append(new_entry)
         is_it_year_entry = False
         for key, value in new_entry.items():
@@ -103,17 +93,6 @@ def first_order_and_label(data):
     return [new_data, years]
 
 
-def remove_empty_string(dict):
-    new_dictionary = {}
-    regex = re.compile(r'[\(*\)\n\r\t]')
-    for elem in dict.keys():
-        key = regex.sub("", elem)
-        value = regex.sub("", dict[elem])
-        if key != None and bool(value.strip()) == True:
-            new_dictionary[key] = value
-    return new_dictionary
-
-
 def find_index_and_year(key, value):
     regex_pattern = "(19|20)\d{2}"
     result = re.match(regex_pattern, value)
@@ -121,7 +100,7 @@ def find_index_and_year(key, value):
         return {"value": value, "index": key}
     else:
         return None
-
+'''
 
 if __name__ == '__main__':
     main()
