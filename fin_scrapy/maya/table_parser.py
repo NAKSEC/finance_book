@@ -113,7 +113,7 @@ class CSVWriter():
             for i in self.columns:
                 index = years[i]
                 try:
-                    data.append(dict_data[index].encode("cp1255"))
+                    data.append(dict_data[index].encode("utf8"))
                 except Exception as e:
                     print e
             self.rows.append(data)

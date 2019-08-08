@@ -3,19 +3,19 @@
 
 import argparse
 import sys
+from threading import Thread
 
 import camelot
 
 from file_system_watcher import *
 
 
-def create_json_file_from_pdf(pdf_path, page_number, flavor='stream'):
-    head, tail = os.path.split(pdf_path)
-    file_start_with = ("json-%s" % tail.split(".")[0])
-    watcher = FileSystemWatcher(os.getcwd(), file_start_with)
-    tables = camelot.read_pdf(pdf_path, pages=page_number, flavor=flavor)
-    tables.export(file_start_with, f='json')
-    return watcher.get_diff()
+def create_json_file_from_pdf(pdf_path, file_start_with, page_number, flavor='stream'):
+    try:
+        tables = camelot.read_pdf(pdf_path, pages=page_number, flavor=flavor)
+        tables.export(file_start_with, f='json')
+    except Exception as e:
+        print e
 
 
 class StoreDictKeyPair(argparse.Action):
@@ -35,11 +35,16 @@ class StoreDictKeyPair(argparse.Action):
 def main(dict_pdf_page, output_directory):
     for path, page in dict_pdf_page.iteritems():
         try:
-            files = create_json_file_from_pdf(path, page)
-            print "file : %s, pdf : %s" % (files, path)
-            move_files_to_output_directory(files, output_directory)
+            head, tail = os.path.split(path)
+            file_start_with = ("json-%s" % tail.split(".")[0])
+            watcher = FileSystemWatcher(os.getcwd(), file_start_with)
+            thread = Thread(target=create_json_file_from_pdf, args=(path, file_start_with, page))
+            thread.start()
         except Exception as e:
             print e
+    files = watcher.get_diff()
+    print "file : %s, pdf : %s" % (files, path)
+    move_files_to_output_directory(files, output_directory)
 
 
 if __name__ == '__main__':
