@@ -119,7 +119,7 @@ class CSVWriter():
             self.rows.append(data)
 
     def write_to_file(self, path):
-        with open(path, mode='wb') as file:
+        with open(path, mode='w') as file:
             writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
             writer.writerow(self.columns)
