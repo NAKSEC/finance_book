@@ -1,4 +1,4 @@
-import formula
+from . import formula
 
 
 class Revenue:

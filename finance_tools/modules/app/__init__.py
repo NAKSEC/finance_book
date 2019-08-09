@@ -24,7 +24,7 @@ CORS(app)
 
 # add mongo url to flask config, so that flask_pymongo can use it to make connection
 app.config['MONGO_URI'] = os.environ.get('DB')
-print os.environ.get('DB')
+print(os.environ.get('DB'))
 mongo = MongoClient(os.environ.get('DB'), False)
 mongo = mongo.data
 

@@ -3,12 +3,12 @@ import os
 
 def move_files_to_output_directory(list_of_files, output_path, end_with=".json"):
     if not os.path.exists(output_path):
-        print "created dir %s " % output_path
+        print("created dir %s " % output_path)
         os.mkdir(output_path)
     for file in list_of_files:
         dest = os.path.join(output_path, file + end_with)
         os.rename(file, dest)
-        print dest
+        print(dest)
 
 
 class FileSystemWatcher:

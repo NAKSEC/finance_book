@@ -5,6 +5,7 @@
 import os
 
 import pandas as pd
+from table_parser import *
 
 
 def main():
@@ -20,7 +21,7 @@ def main():
                 header_file = os.path.join(root, file)
 
     data = pd.read_csv(header_file, error_bad_lines=False)
-    print data.head()
+    print(data.head())
 
 if __name__ == '__main__':
     main()

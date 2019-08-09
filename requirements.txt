@@ -8,7 +8,7 @@ constantly==15.1.0
 cryptography==2.3.1
 cssselect==1.0.3
 enum34==1.1.6
-functools32==3.2.3.post2
+functools32==3.2.3
 http-crawler==0.2.1
 hyperlink==18.0.0
 idna==2.7
@@ -33,7 +33,11 @@ urllib3==1.24
 w3lib==1.19.0
 webencodings==0.5.1
 zope.interface==4.5.0
-requests==2.18.1
 Flask==0.12.2
 pymongo==3.4.0
+xlsxwriter==1.1.8
 flask_pymongo==0.5.1
+requests==2.18.1
+pymongo==3.4.0
+flask-cors==3.0.7
+flask_oauth==0.12

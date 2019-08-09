@@ -26,7 +26,7 @@ class JSONEncoder(json.JSONEncoder):
 
 class TestBalanceSheet(unittest.TestCase):
 
-    def get_random_int(self, min = 0, max = sys.maxint):
+    def get_random_int(self, min=0, max=sys.maxsize):
         return random.randint(min, max)
 
     def test_balance_sheet(self):
@@ -135,7 +135,7 @@ class TestIncomeStatement(unittest.TestCase):
                                            interest_expense,
                                            income_tax_expense)
 
-        print JSONEncoder().encode(income_statement)
+        print(JSONEncoder().encode(income_statement))
 
         expected = total_revenue - \
                    cost_of_revenue - \

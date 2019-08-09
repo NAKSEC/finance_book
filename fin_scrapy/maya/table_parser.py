@@ -1,6 +1,9 @@
-import csv
+import json
+from string_utils import *
+import xlsxwriter
 import json
 
+import xlsxwriter
 from string_utils import *
 
 
@@ -16,8 +19,8 @@ class ValueIndexPair:
 
 class KnownWords:
     def __init__(self):
-        self.ANNOTATION = [u'\u05e8\u05d5\u05d0\u05d1', u'\u05e8\u05d5\u05d0\u05d9\u05d1']
-        self.TITLE = u'\u05e9\u05d7"  \u05d9\u05e4\u05dc\u05d0\u05d1'
+        self.ANNOTATION = ['\u05e8\u05d5\u05d0\u05d1', '\u05e8\u05d5\u05d0\u05d9\u05d1']
+        self.TITLE = '\u05e9\u05d7"  \u05d9\u05e4\u05dc\u05d0\u05d1'
 
 
 class JsonTableParser:
@@ -31,8 +34,9 @@ class JsonTableParser:
     def parse(self):
         for entry in self.raw_data:
             new_entry = remove_empty_key_value_from_dictionary(entry)
+            self.merge_divided_entries(new_entry)
             self.escaped_data.append(new_entry)
-            for key, value in new_entry.items():
+            for key, value in list(new_entry.items()):
                 new_value = self.parse_years_colunm_from_table(key, value)
                 if new_value is not None:
                     new_entry[key] = new_value
@@ -41,20 +45,42 @@ class JsonTableParser:
 
         self.append_data()
 
+    def merge_divided_entries(self, dictionary_of_strings):
+        pos = 0
+        values = list(dictionary_of_strings.values())
+        for elem in list(dictionary_of_strings.keys()):
+            pos += 1
+            if dictionary_of_strings[elem].endswith(",") or dictionary_of_strings[elem].endswith('\\'):
+                dictionary_of_strings[pos] = dictionary_of_strings[elem].replace(',', '') + \
+                                             values[pos]
+                del dictionary_of_strings[elem]
+
+
     def add_title_index_if_not_exist(self):
-        if not self.years.has_key("Title"):
+        if "Title" not in self.years:
             bigger_number = 0
-            for i in self.years.values():
+            for i in list(self.years.values()):
                 if bigger_number < int(i):
                     bigger_number = int(i)
-            self.years["Title"] = unicode(bigger_number + 1)
+
+            index = (bigger_number + 1)
+            last_index = int(list(self.escaped_data[-1].keys())[-1])
+            if int(last_index) > index:
+                self.years["Title"] = str(last_index)
+            else:
+                self.years["Title"] = str(index)
 
     def append_data(self):
         new_data = []
         for entry in self.escaped_data:
-            number_of_values_in_row = len(entry)
-            if number_of_values_in_row == len(self.years) or (number_of_values_in_row + 1 == len(self.years)):
-                new_data.append(entry)
+            new_entry = {}
+            try:
+                for k, v in self.years.items():
+                    new_entry[v] = entry.get(v, "")
+            except Exception as e:
+                print(e)
+            if len(new_entry) != 0:
+                new_data.append(new_entry)
         self.escaped_data = new_data
 
     def parse_years_colunm_from_table(self, index, value):
@@ -66,7 +92,7 @@ class JsonTableParser:
             self.years[year_to_index.value] = year_to_index.index
             return value
         except Exception as error:
-            print error
+            print(error)
             if self.known_words.TITLE == value or (is_it_year_entry and not value):
                 self.years["Title"] = index
                 del self.escaped_data[-1]
@@ -82,30 +108,30 @@ class JsonTableParser:
             raise Exception("Cant find regex pattern in string : %s. key : key" % (value, key))
 
 
-class CSVWriter():
+class XlsxWriter():
     def __init__(self, json_table_object):
         self.json_table_object = json_table_object
         self.columns = []
         self.rows = []
 
-    def create_csv_columns_and_rows(self):
+    def create_columns_and_rows(self):
         years = self.json_table_object.years
 
-        if years.has_key("Title"):
+        if "Title" in years:
             self.columns.append("Title")
 
-        list_of_years = years.keys()
+        list_of_years = list(years.keys())
         only_years = []
         for x in list_of_years:
             if is_year_by_regex(x):
-                only_years.append(x)
+                only_years.append(str(x))
 
         only_years.sort(key=int)
 
         for x in only_years:
-            self.columns.append(x)
+            self.columns.append(str(x))
 
-        if years.has_key("Annotation"):
+        if "Annotation" in years:
             self.columns.append("Annotation")
 
         for dict_data in self.json_table_object.escaped_data:
@@ -113,18 +139,31 @@ class CSVWriter():
             for i in self.columns:
                 index = years[i]
                 try:
-                    data.append(dict_data[index].encode("utf8"))
+                    data.append(str(dict_data[index]))
                 except Exception as e:
-                    print e
+                    print(e)
             self.rows.append(data)
 
     def write_to_file(self, path):
-        with open(path, mode='w') as file:
-            writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        workbook = xlsxwriter.Workbook(path + ".xlsx")
+        worksheet = workbook.add_worksheet()
+        start_number = 0;
+        worksheet.write_row(start_number, 0, data=self.columns)
+        for s in self.rows:
+            start_number += 1
+            s[0] = (s[0])[::-1]
+            s[1::] = self.convet_list_of_strings_to_int(s[1::])
+            worksheet.write_row(start_number, 0, data=s)
+        workbook.close()
 
-            writer.writerow(self.columns)
-            for s in self.rows:
-                s[0] = s[0][::-1]
-                writer.writerow(s)
+    def convet_list_of_strings_to_int(self, lst):
+        new_lst = []
+        for i in lst:
+            try:
+                new_lst.append(int(i.replace(',', '')))
+            except Exception as e:
+                new_lst.append(i)
+                print(e)
+        return new_lst
 
         # print (df)

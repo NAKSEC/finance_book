@@ -8,7 +8,7 @@ from bson import json_util
 from flask import request, jsonify, flash, redirect, send_file
 from werkzeug.utils import secure_filename
 
-from data import *
+from .data import *
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = os.path.join(ROOT_PATH, 'uploads')
@@ -61,7 +61,7 @@ def get_summary_data_by_ticker():
         cursor = mongo.db.summary_data.find({"ticker": ticker})
         json_docs = []
         for doc in cursor:
-            print "in doc"
+            print("in doc")
             json_doc = json.dumps(doc, default=json_util.default)
             json_docs.append(json_doc)
         return jsonify(json_docs), 200
@@ -78,10 +78,10 @@ def get_finance_by_ticker():
 
 @app.route('/upload_pdf', methods=['POST'])
 def save_files():
-    print "uploaded"
+    print("uploaded")
     if request.method == 'POST':
-        print request.files
-        print request.files.keys
+        print(request.files)
+        print(request.files.keys)
         # check if the post request has the file part
         if 'statement_fill' not in request.files:
             LOG.info("statement_fill not in request.files")
@@ -113,7 +113,7 @@ def save_files():
 def get_pdf_file(path):
     LOG.info("get pdf request : %s" % path)
     dir_list = os.listdir(app.config['UPLOAD_FOLDER'])
-    print dir_list
+    print(dir_list)
     for i in dir_list:
         if path == i:
             LOG.info("found the relevant pdf to send")

@@ -1,5 +1,4 @@
-from calculation.balanceSheet import BalanceSheet
-from calculation.incomeStatement import IncomeStatement
+from .calculation.balanceSheet import BalanceSheet
 
 
 class Comapny:

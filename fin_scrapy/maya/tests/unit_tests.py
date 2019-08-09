@@ -42,12 +42,12 @@ def deserialize_json(cls=None, sub_cls=None, path=None):
     l = []
     for i in data:
         instance = object.__new__(cls)
-        for key, value in i.items():
+        for key, value in list(i.items()):
             if isinstance(value, list):
                 o = []
                 for row in value:
                     sub_instance = object.__new__(sub_cls)
-                    for k, v in row.items():
+                    for k, v in list(row.items()):
                         setattr(sub_instance, k, v)
                     o.append(sub_instance)
                 setattr(instance, key, o)
@@ -67,9 +67,8 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return o.__dict__
 
-
 class DumperTests(unittest.TestCase):
-    def get_random_int(self, min=0, max=sys.maxint):
+    def get_random_int(self, min=0, max=sys.maxsize):
         return random.randint(min, max)
 
     def test_dumper(self):
@@ -106,50 +105,52 @@ class DumperTests(unittest.TestCase):
                 folder = i.mayaid
                 for x in i.list:
                     try:
-                        formated_string = os.path.join(os.getcwd(), "../" + path, folder, x.pdf + ".pdf") + "=" + str(
+                        if "q" not in x.pdf:
+                            formated_string = os.path.join(os.getcwd(), "../" + path, folder,
+                                                           x.pdf + ".pdf") + "=" + str(
                             x.ispage) + " "
-                        key_value.append(formated_string)
+                            key_value.append(formated_string)
                     except Exception as e:
-                        print e
+                        print(e)
 
             pdf_params = "".join(key_value)
-            print len(key_value)
-            print pdf_params
-            process_command = "pythonw ../dumper.py -output_dir %s -key_pairs %s" % ("test_out", pdf_params)
+            print(len(key_value))
+            print(pdf_params)
+            process_command = "pythonw ../dumper.py -output_dir %s -key_pairs %s" % ("test_bs_pages_out", pdf_params)
             subprocess.call(process_command, shell=True)
 
 
         except Exception as e:
-            print e
+            print(e)
         # list_dir = os.listdir("../data")
 
-
 class TableParserTests(unittest.TestCase):
-    def get_random_int(self, min=0, max=sys.maxint):
+    def get_random_int(self, min=0, max=sys.maxsize):
         return random.randint(min, max)
 
     def test_writer(self):
         sys.path.append("../")
-        dir = "test_out"
+        dir = "test_bs_pages_out"
         list_dir = os.listdir(dir)
-        output_dir = os.path.join(dir, "csv")
+        output_dir = os.path.join(dir, "xslx")
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
 
         os.mkdir(output_dir)
 
         for file in list_dir:
+            print("started to parse file : %s" % file)
             try:
                 head, tail = os.path.split(file)
                 j = JsonTableParser(os.path.join(dir, file))
                 j.parse()
-                c = CSVWriter(j)
-                c.create_csv_columns_and_rows()
+                c = XlsxWriter(j)
+                c.create_columns_and_rows()
 
-                csv_path = os.path.join(output_dir, tail + ".csv")
+                csv_path = os.path.join(output_dir, tail)
                 c.write_to_file(csv_path)
             except Exception as e:
-                print e
+                print(e)
 
 
 if __name__ == '__main__':

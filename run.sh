@@ -3,7 +3,7 @@
 init_virtual_environment()
 {
     echo "call virtual env"
-    virtualenv --python=python2.7 .env && source .env/bin/activate && pip install -r requirements.txt
+    virtualenv --python=python3.7 .env && source .env/bin/activate && pip install -r requirements.txt
 }
 
 init_dockers_tool()

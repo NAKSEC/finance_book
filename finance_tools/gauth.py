@@ -1,6 +1,12 @@
-from urllib2 import Request, urlopen, URLError
+import sys
+import urllib.parse as urlparse
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 from flask import url_for, redirect
+
+sys.modules["urlparse"] = urlparse
+sys.modules["urllib"] = urlparse
 from flask_oauth import OAuth
 
 GOOGLE_CLIENT_ID = '446945525351-dpgcaca62kdm11is4etbuec6ft3hjiqu.apps.googleusercontent.com'
@@ -34,7 +40,7 @@ def authenticate(session):
     req = Request('https://www.googleapis.com/oauth2/v1/userinfo', None, headers)
     try:
         res = urlopen(req)
-    except URLError, e:
+    except URLError as e:
         if e.code == 401:
             # Unauthorized - bad token
             session.pop('access_token', None)

@@ -1,4 +1,4 @@
-import formula
+from . import formula
 
 
 class CurrentAssets():
@@ -198,8 +198,8 @@ class BalanceSheet():
                              other_stockholder_equity)
 
     def verify(self):
-        print "diff %s" % ((self.long_term_assets.get_total()) -
-                           (self.long_term_liabilities.get_total() + self.equity.get_total()))
+        print("diff %s" % ((self.long_term_assets.get_total()) -
+                           (self.long_term_liabilities.get_total() + self.equity.get_total())))
         return (self.long_term_assets.get_total()) == \
                (self.long_term_liabilities.get_total() + self.equity.get_total())
 
@@ -212,6 +212,6 @@ class BalanceSheet():
                                        self.current_assets.inventory)
 
     def get_debt_to_equity(self):
-        print (self.equity.get_total())
+        print((self.equity.get_total()))
         return formula.get_debt_to_equity(self.long_term_liabilities.long_term_debt,
                                           self.equity.get_total())
