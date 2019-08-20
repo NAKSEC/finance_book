@@ -1,4 +1,4 @@
-import utils
+from . import utils
 
 
 def format_earnings_list(earnings_raw):
@@ -12,7 +12,7 @@ def format_earnings_list(earnings_raw):
 def parse_balance_sheet(json_raw_result, ticker):
     balance_sheets = []
     balance_sheet = json_raw_result["balanceSheetHistory"]["balanceSheetStatements"]
-    print "len %s" % len(balance_sheet)
+    print(("len %s" % len(balance_sheet)))
     for i in balance_sheet:
         balance_sheet_data = utils.raw_json_answer_parser(i)
         balance_sheet_data['ticker'] = ticker

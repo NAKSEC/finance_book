@@ -5,6 +5,8 @@
 
 import sys
 
+sys.path.append('../../')
+
 TRACE_FILES = ["parser", "finance", "mongohandler", "utils.py"]
 
 def trace_calls(frame, event, arg):
@@ -24,8 +26,8 @@ def trace_calls(frame, event, arg):
     for file_name in TRACE_FILES:
         if file_name in caller_filename:
             if "lib/python2.7/" not in func_filename:
-                print 'Call to %s on line %s of %s from line %s of %s' % \
-                      (func_name, func_line_no, func_filename, caller_line_no, caller_filename)
+                print(('Call to %s on line %s of %s from line %s of %s' % \
+                       (func_name, func_line_no, func_filename, caller_line_no, caller_filename)))
 
     return
 
