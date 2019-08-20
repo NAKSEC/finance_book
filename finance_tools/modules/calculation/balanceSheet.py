@@ -116,8 +116,6 @@ class Equity():
     def get_total(self):
         return self.retained_earnings + self.capital_surplus + self.other_stockholder_equity + self.common_stock
 
-
-
 class BalanceSheet():
     def __init__(self,
                  company_name,
@@ -211,7 +209,22 @@ class BalanceSheet():
                                        self.current_liabilities.get_total(),
                                        self.current_assets.inventory)
 
+    def get_company_debt(self):
+        return self.long_term_liabilities.long_term_debt + \
+               self.current_liabilities.short_debt - \
+               self.current_assets.cash
+
+    def get_company_net_debt(self):
+        return self.long_term_liabilities.long_term_debt + \
+               self.current_liabilities.short_debt - \
+               self.current_assets.cash - self.current_assets.short_term_investment
+
     def get_debt_to_equity(self):
         print((self.equity.get_total()))
         return formula.get_debt_to_equity(self.long_term_liabilities.long_term_debt,
                                           self.equity.get_total())
+
+    def get_net_working_capital(self):
+        return self.current_assets.net_receivable + self.current_assets.inventory - \
+               self.current_liabilities.accounts_payable - \
+               self.current_liabilities.other_current_liabilities

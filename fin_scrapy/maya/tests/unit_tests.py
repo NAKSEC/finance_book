@@ -116,7 +116,7 @@ class DumperTests(unittest.TestCase):
             pdf_params = "".join(key_value)
             print(len(key_value))
             print(pdf_params)
-            process_command = "pythonw ../dumper.py -output_dir %s -key_pairs %s" % ("test_bs_pages_out", pdf_params)
+            process_command = "pythonw ../dumper.py -output_dir %s -key_pairs %s" % ("test_bs2_pages_out", pdf_params)
             subprocess.call(process_command, shell=True)
 
 
@@ -130,7 +130,7 @@ class TableParserTests(unittest.TestCase):
 
     def test_writer(self):
         sys.path.append("../")
-        dir = "test_bs_pages_out"
+        dir = "test_bs2_pages_out"
         list_dir = os.listdir(dir)
         output_dir = os.path.join(dir, "xslx")
         if os.path.exists(output_dir):
