@@ -2,8 +2,6 @@ import json
 from string_utils import *
 import xlsxwriter
 import json
-
-import xlsxwriter
 from string_utils import *
 
 

@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import unittest
+from maya import dumper
 
 sys.path.append("../")
 from table_parser import *
@@ -34,15 +35,15 @@ class CompanyDetails(object):
 
 def deserialize_json(cls=None, sub_cls=None, path=None):
     def read_json(_path):
-        with open(_path, "r") as file:
+        with open(_path, "r", encoding="utf8") as file:
             return json.load(file)
 
-    data = read_json(path)
+    companies = read_json(path)
 
     l = []
-    for i in data:
+    for company in companies:
         instance = object.__new__(cls)
-        for key, value in list(i.items()):
+        for key, value in list(company.items()):
             if isinstance(value, list):
                 o = []
                 for row in value:
@@ -57,6 +58,7 @@ def deserialize_json(cls=None, sub_cls=None, path=None):
 
     return l
 
+
 class JSONEncoder(json.JSONEncoder):
     ''' extend json-encoder class'''
 
@@ -66,6 +68,7 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(o, datetime.datetime):
             return str(o)
         return o.__dict__
+
 
 class DumperTests(unittest.TestCase):
     def get_random_int(self, min=0, max=sys.maxsize):
@@ -94,21 +97,22 @@ class DumperTests(unittest.TestCase):
         for file in files:
             self.assertGreater(os.stat(os.path.join(output_dir, file)).st_size, 0, ("the file didnt parsed %s", file))
 
-    def test_all_current_data(self):
+    @staticmethod
+    def test_all_current_data():
         try:
             sys.path.append("../")
             file_path = "../data/convert.json"
-            object = deserialize_json(cls=CompanyDetails, sub_cls=FileEntry, path=file_path)
+            json_object = deserialize_json(cls=CompanyDetails, sub_cls=FileEntry, path=file_path)
             path = "data"
             key_value = []
-            for i in object:
+            for i in json_object:
                 folder = i.mayaid
                 for x in i.list:
                     try:
                         if "q" not in x.pdf:
                             formated_string = os.path.join(os.getcwd(), "../" + path, folder,
                                                            x.pdf + ".pdf") + "=" + str(
-                            x.ispage) + " "
+                                x.bspage) + " "
                             key_value.append(formated_string)
                     except Exception as e:
                         print(e)
@@ -116,13 +120,16 @@ class DumperTests(unittest.TestCase):
             pdf_params = "".join(key_value)
             print(len(key_value))
             print(pdf_params)
+
             process_command = "pythonw ../dumper.py -output_dir %s -key_pairs %s" % ("test_bs_pages_out", pdf_params)
             subprocess.call(process_command, shell=True)
 
 
         except Exception as e:
+            print("Failed")
             print(e)
         # list_dir = os.listdir("../data")
+
 
 class TableParserTests(unittest.TestCase):
     def get_random_int(self, min=0, max=sys.maxsize):
@@ -130,9 +137,9 @@ class TableParserTests(unittest.TestCase):
 
     def test_writer(self):
         sys.path.append("../")
-        dir = "test_bs_pages_out"
-        list_dir = os.listdir(dir)
-        output_dir = os.path.join(dir, "xslx")
+        path = "test_bs_pages_out"
+        list_dir = os.listdir(path)
+        output_dir = os.path.join(path, "xslx")
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
 
@@ -142,7 +149,7 @@ class TableParserTests(unittest.TestCase):
             print("started to parse file : %s" % file)
             try:
                 head, tail = os.path.split(file)
-                j = JsonTableParser(os.path.join(dir, file))
+                j = JsonTableParser(os.path.join(path, file))
                 j.parse()
                 c = XlsxWriter(j)
                 c.create_columns_and_rows()
