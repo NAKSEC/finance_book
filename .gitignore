@@ -106,3 +106,7 @@ yarn-error.log*
 *.sln
 *.sw?
 
+#test output
+
+fin_scrapy/maya/tests/test_bs_pages_out/json*
+fin_scrapy/maya/tests/test_bs_pages_out/xslx/*

@@ -1,9 +1,6 @@
 import json
-
+from string_utils import *
 import xlsxwriter
-from string_utils import *
-from string_utils import *
-
 
 class ValueIndexPair:
     def __init__(self, value, index):
