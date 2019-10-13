@@ -1,10 +1,10 @@
 import sys
-import urllib.parse as urlparse
+from urllib.parse import urlparse
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 from flask import url_for, redirect
-
+from urllib import parse as urlparse
 sys.modules["urlparse"] = urlparse
 sys.modules["urllib"] = urlparse
 from flask_oauth import OAuth
