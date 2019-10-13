@@ -10,12 +10,12 @@ def del_none_values_in_json(json_obj):
     """
     # For Python 3, write `list(d.items())`; `d.items()` won’t work
     # For Python 2, write `d.items()`; `d.iteritems()` won’t work
-    for key, value in json_obj.items():
+    for key, value in list(json_obj.items()):
         if "." in key:
             new_key = key.replace(".", "")
             json_obj[new_key] = json_obj.pop(key)
         if value is None:
-            print "This value is None : %s " % value
+            print(("This value is None : %s " % value))
             del json_obj[key]
         elif isinstance(value, dict):
             del_none_values_in_json(value)
@@ -30,13 +30,13 @@ def del_none_values_in_json(json_obj):
 
 def raw_json_answer_parser(price_dict_raw):
     price_data = {}
-    for key, value in price_dict_raw.items():
+    for key, value in list(price_dict_raw.items()):
         if type(value) is dict:
             if len(value) == 0 or len(value) == 1:
                 continue
             if "date" in key:
-                print key
-                print value
+                print(key)
+                print(value)
                 price_data[key] = value['fmt']
             else:
                 price_data[key] = value['raw']

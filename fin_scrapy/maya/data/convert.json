@@ -5,17 +5,9 @@
     "tckr": "המלט",
     "list": [
       {
-        "year": "2015",
-        "pdf": "68_2016",
-        "bspage": "65",
-        "ispage": "67",
-        "cfpage": "71",
-        "cpa": "EY"
-      },
-      {
         "year": "2016",
         "pdf": "68_2016",
-        "bspage": "65",
+        "bspage": "66",
         "ispage": "67",
         "cfpage": "71",
         "cpa": "EY"

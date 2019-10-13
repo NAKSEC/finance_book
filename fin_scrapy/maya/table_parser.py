@@ -1,9 +1,6 @@
 import json
 from string_utils import *
 import xlsxwriter
-import json
-from string_utils import *
-
 
 class ValueIndexPair:
     def __init__(self, value, index):
@@ -41,6 +38,7 @@ class JsonTableParser:
 
         self.add_title_index_if_not_exist()
 
+        self.merge_title_and_numbers_if_divided()
         self.append_data()
 
     def merge_divided_entries(self, dictionary_of_strings):
@@ -52,6 +50,16 @@ class JsonTableParser:
                 dictionary_of_strings[pos] = dictionary_of_strings[elem].replace(',', '') + \
                                              values[pos]
                 del dictionary_of_strings[elem]
+
+    def merge_title_and_numbers_if_divided(self):
+        pos = 0
+        title_pos = self.years["Title"]
+        for i in self.escaped_data:
+            pos += 1
+            keys = list(i.keys())
+            if len(keys) == 1 and title_pos in keys and self.escaped_data[pos].get(title_pos, None) == None:
+                self.escaped_data[pos][title_pos] = i[title_pos]
+                del self.escaped_data[pos - 1]
 
 
     def add_title_index_if_not_exist(self):

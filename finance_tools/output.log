@@ -1500,3 +1500,116 @@
 2019-08-09 09:56:21,486 - root - INFO - running environment: development
 2019-08-09 09:58:41,095 - root - INFO - running environment: development
 2019-08-09 09:58:41,342 - root - INFO - running environment: development
+2019-08-13 18:23:14,370 - root - INFO - running environment: development
+2019-08-13 18:23:14,628 - root - INFO - running environment: development
+2019-08-13 18:23:17,999 - app.controllers.users - INFO - ticker : AAPL 
+2019-08-13 18:23:48,430 - app.controllers.users - INFO - ticker : AAPL 
+2019-08-13 18:24:27,997 - app.controllers.users - INFO - ticker : AAPL 
+2019-08-13 18:24:28,504 - app.controllers.data - INFO - True
+2019-08-13 18:24:28,504 - app.controllers.data - INFO - 2018-09-29 00:00:00
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - current ratio : 1.1238426916297297 
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - quick ratio : 1.0899919565998666 
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - debt to equity : 0.8748261733879623 
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - enterprise value : -43167000000.0 
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - True
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - 2017-09-30 00:00:00
+2019-08-13 18:24:28,505 - app.controllers.data - INFO - current ratio : 1.2760628484139107 
+2019-08-13 18:24:28,506 - app.controllers.data - INFO - quick ratio : 1.2279048544844962 
+2019-08-13 18:24:28,506 - app.controllers.data - INFO - debt to equity : 0.7251710221041874 
+2019-08-13 18:24:28,506 - app.controllers.data - INFO - enterprise value : -41813000000.0 
+2019-08-13 18:24:28,506 - app.controllers.data - INFO - True
+2019-08-13 18:24:28,506 - app.controllers.data - INFO - 2016-09-24 00:00:00
+2019-08-13 18:24:28,506 - app.controllers.data - INFO - current ratio : 1.352669417512594 
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - quick ratio : 1.3256841252563096 
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - debt to equity : 0.58812934213912 
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - enterprise value : -14106000000.0 
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - True
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - 2015-09-26 00:00:00
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - current ratio : 1.1087706239920605 
+2019-08-13 18:24:28,507 - app.controllers.data - INFO - quick ratio : 1.079630318819005 
+2019-08-13 18:24:28,508 - app.controllers.data - INFO - debt to equity : 0.44680993674332875 
+2019-08-13 18:24:28,508 - app.controllers.data - INFO - enterprise value : -13737000000.0 
+2019-08-13 18:24:28,588 - root - ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2019-08-13 18:26:46,454 - root - INFO - running environment: development
+2019-08-13 18:27:16,438 - root - INFO - running environment: development
+2019-08-13 18:27:22,252 - root - INFO - running environment: development
+2019-08-13 18:27:29,602 - app.controllers.users - INFO - ticker : AAPL 
+2019-08-13 18:27:29,605 - app.controllers.data - INFO - True
+2019-08-13 18:27:29,605 - app.controllers.data - INFO - 2018-09-29 00:00:00
+2019-08-13 18:27:29,605 - app.controllers.data - INFO - current ratio : 1.1238426916297297 
+2019-08-13 18:27:29,605 - app.controllers.data - INFO - quick ratio : 1.0899919565998666 
+2019-08-13 18:27:29,605 - app.controllers.data - INFO - debt to equity : 0.8748261733879623 
+2019-08-13 18:27:29,605 - app.controllers.data - INFO - enterprise value : -31080000000.0 
+2019-08-13 18:27:29,606 - app.controllers.data - INFO - True
+2019-08-13 18:27:29,606 - app.controllers.data - INFO - 2017-09-30 00:00:00
+2019-08-13 18:27:29,606 - app.controllers.data - INFO - current ratio : 1.2760628484139107 
+2019-08-13 18:27:29,606 - app.controllers.data - INFO - quick ratio : 1.2279048544844962 
+2019-08-13 18:27:29,607 - app.controllers.data - INFO - debt to equity : 0.7251710221041874 
+2019-08-13 18:27:29,607 - app.controllers.data - INFO - enterprise value : -27877000000.0 
+2019-08-13 18:27:29,607 - app.controllers.data - INFO - True
+2019-08-13 18:27:29,607 - app.controllers.data - INFO - 2016-09-24 00:00:00
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - current ratio : 1.352669417512594 
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - quick ratio : 1.3256841252563096 
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - debt to equity : 0.58812934213912 
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - enterprise value : -5823000000.0 
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - True
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - 2015-09-26 00:00:00
+2019-08-13 18:27:29,608 - app.controllers.data - INFO - current ratio : 1.1087706239920605 
+2019-08-13 18:27:29,609 - app.controllers.data - INFO - quick ratio : 1.079630318819005 
+2019-08-13 18:27:29,609 - app.controllers.data - INFO - debt to equity : 0.44680993674332875 
+2019-08-13 18:27:29,609 - app.controllers.data - INFO - enterprise value : 1348000000.0 
+2019-08-13 18:28:09,198 - root - INFO - running environment: development
+2019-08-13 18:31:40,703 - root - INFO - running environment: development
+2019-08-13 18:31:40,962 - root - INFO - running environment: development
+2019-08-13 18:31:43,698 - app.controllers.users - INFO - ticker : AAPL 
+2019-08-13 18:31:43,701 - app.controllers.data - INFO - True
+2019-08-13 18:31:43,701 - app.controllers.data - INFO - 2018-09-29 00:00:00
+2019-08-13 18:31:43,702 - app.controllers.data - INFO - current ratio : 1.1238426916297297 
+2019-08-13 18:31:43,702 - app.controllers.data - INFO - quick ratio : 1.0899919565998666 
+2019-08-13 18:31:43,702 - app.controllers.data - INFO - debt to equity : 0.8748261733879623 
+2019-08-13 18:31:43,702 - app.controllers.data - INFO - enterprise value : -17254000000.0 
+2019-08-13 18:31:43,702 - app.controllers.data - INFO - True
+2019-08-13 18:31:43,702 - app.controllers.data - INFO - 2017-09-30 00:00:00
+2019-08-13 18:31:43,703 - app.controllers.data - INFO - current ratio : 1.2760628484139107 
+2019-08-13 18:31:43,703 - app.controllers.data - INFO - quick ratio : 1.2279048544844962 
+2019-08-13 18:31:43,703 - app.controllers.data - INFO - debt to equity : 0.7251710221041874 
+2019-08-13 18:31:43,703 - app.controllers.data - INFO - enterprise value : -21524000000.0 
+2019-08-13 18:31:43,703 - app.controllers.data - INFO - True
+2019-08-13 18:31:43,703 - app.controllers.data - INFO - 2016-09-24 00:00:00
+2019-08-13 18:31:43,704 - app.controllers.data - INFO - current ratio : 1.352669417512594 
+2019-08-13 18:31:43,704 - app.controllers.data - INFO - quick ratio : 1.3256841252563096 
+2019-08-13 18:31:43,704 - app.controllers.data - INFO - debt to equity : 0.58812934213912 
+2019-08-13 18:31:43,704 - app.controllers.data - INFO - enterprise value : 6378000000.0 
+2019-08-13 18:31:43,704 - app.controllers.data - INFO - True
+2019-08-13 18:31:43,704 - app.controllers.data - INFO - 2015-09-26 00:00:00
+2019-08-13 18:31:43,705 - app.controllers.data - INFO - current ratio : 1.1087706239920605 
+2019-08-13 18:31:43,705 - app.controllers.data - INFO - quick ratio : 1.079630318819005 
+2019-08-13 18:31:43,705 - app.controllers.data - INFO - debt to equity : 0.44680993674332875 
+2019-08-13 18:31:43,705 - app.controllers.data - INFO - enterprise value : 7383000000.0 
+2019-08-13 18:32:25,432 - root - INFO - running environment: development
+2019-08-13 18:32:26,042 - root - INFO - running environment: development
+2019-08-13 18:32:28,619 - app.controllers.users - INFO - ticker : AAPL 
+2019-08-13 18:32:28,621 - app.controllers.data - INFO - True
+2019-08-13 18:32:28,621 - app.controllers.data - INFO - 2018-09-29 00:00:00
+2019-08-13 18:32:28,622 - app.controllers.data - INFO - current ratio : 1.1238426916297297 
+2019-08-13 18:32:28,622 - app.controllers.data - INFO - quick ratio : 1.0899919565998666 
+2019-08-13 18:32:28,622 - app.controllers.data - INFO - debt to equity : 0.8748261733879623 
+2019-08-13 18:32:28,622 - app.controllers.data - INFO - enterprise value : -43167000000.0 
+2019-08-13 18:32:28,622 - app.controllers.data - INFO - True
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - 2017-09-30 00:00:00
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - current ratio : 1.2760628484139107 
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - quick ratio : 1.2279048544844962 
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - debt to equity : 0.7251710221041874 
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - enterprise value : -41813000000.0 
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - True
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - 2016-09-24 00:00:00
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - current ratio : 1.352669417512594 
+2019-08-13 18:32:28,623 - app.controllers.data - INFO - quick ratio : 1.3256841252563096 
+2019-08-13 18:32:28,624 - app.controllers.data - INFO - debt to equity : 0.58812934213912 
+2019-08-13 18:32:28,624 - app.controllers.data - INFO - enterprise value : -14106000000.0 
+2019-08-13 18:32:28,624 - app.controllers.data - INFO - True
+2019-08-13 18:32:28,624 - app.controllers.data - INFO - 2015-09-26 00:00:00
+2019-08-13 18:32:28,624 - app.controllers.data - INFO - current ratio : 1.1087706239920605 
+2019-08-13 18:32:28,624 - app.controllers.data - INFO - quick ratio : 1.079630318819005 
+2019-08-13 18:32:28,625 - app.controllers.data - INFO - debt to equity : 0.44680993674332875 
+2019-08-13 18:32:28,625 - app.controllers.data - INFO - enterprise value : -13737000000.0 

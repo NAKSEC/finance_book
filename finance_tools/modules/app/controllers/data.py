@@ -57,5 +57,6 @@ def get_company_data(ticker):
         LOG.info("current ratio : %s " % balance.get_current_ratio())
         LOG.info("quick ratio : %s " % balance.get_quick_ratio())
         LOG.info("debt to equity : %s " % balance.get_debt_to_equity())
+        LOG.info("enterprise value : %s " % balance.get_net_working_capital())
         balances.append(balance)
     return balances
