@@ -1,4 +1,4 @@
-FROM python:2.7
+FROM python:3.7
 ADD . /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
