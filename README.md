@@ -14,7 +14,7 @@ Scrapy
 
 ## Installation
 
-Run install.sh
+Run install.sh or use docker-compose in finance_tools directory
 
 ## Modules
 * **financestats** - Scraping data from Yahoo Finanace. Used spider lib to scrape the data from yahoo and also use the REST API.
